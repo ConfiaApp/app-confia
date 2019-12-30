@@ -1,0 +1,15 @@
+version: '3.7'
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    ports:
+      - 5433:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    restart: on-failure
+    environment:
+      - POSTGRES_USER=lucas
+      - POSTGRES_PASSWORD=myPassword
+      - POSTGRES_DB=confia_db
+        
