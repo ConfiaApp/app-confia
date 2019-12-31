@@ -1,3 +1,4 @@
+import * as Yup from 'yup';
 import User from '../models/User';
 
 class UserController {
@@ -10,8 +11,22 @@ class UserController {
   }
 
   async store(req, res) {
-    const UserExists = await User.findOne({ where: { email: req.body.email } });
-    if (UserExists) {
+    const schema = Yup.object().shape({
+      name: Yup.string().required(),
+      email: Yup.string()
+        .email()
+        .required(),
+      password: Yup.string()
+        .min(6)
+        .required(),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Params validation failed' });
+    }
+
+    const userExists = await User.findOne({ where: { email: req.body.email } });
+    if (userExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
     const { id, name, email } = await User.create(req.body);
@@ -19,7 +34,49 @@ class UserController {
   }
 
   async update(req, res) {
-    return res.json();
+    const schema = Yup.object().shape({
+      name: Yup.string(),
+      email: Yup.string().email(),
+      old_password: Yup.string().min(6),
+      password: Yup.string()
+        .min(6)
+        .when('old_password', (oldPassword, field) =>
+          oldPassword ? field.required() : field
+        ),
+      confirm_password: Yup.string().when(
+        'password',
+        (confirmPassword, field) =>
+          confirmPassword
+            ? field.required().oneOf([Yup.ref('password')])
+            : field
+      ),
+    });
+
+    if (!(await schema.isValid(req.body))) {
+      return res.status(400).json({ error: 'Params validation failed' });
+    }
+
+    const user = await User.findByPk(req.userId);
+    const { email, oldPassword } = req.body;
+
+    try {
+      if (email !== user.email) {
+        const emailExists = await User.findOne({
+          where: { email },
+        });
+        if (emailExists) {
+          return res.status(400).json({ error: 'Email already exists' });
+        }
+      }
+      if (oldPassword && !(await user.checkPassword(oldPassword))) {
+        return res.status(401).json({ error: 'Password does not match' });
+      }
+      const { id, name } = await user.update(req.body);
+      return res.json({ id, name, email });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'User does not updated' });
+    }
   }
 
   async delete(req, res) {
