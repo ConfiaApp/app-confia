@@ -1,7 +1,7 @@
 module.exports = {
   dialect: 'postgres',
-  host: 'localhost',
-  port: '5433',
+  host: 'postgres',
+  port: '5432',
   username: 'lucas',
   password: 'myPassword',
   database: 'confia_db',
