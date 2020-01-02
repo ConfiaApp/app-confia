@@ -1,5 +1,16 @@
-version: '3.7'
+version: '3.3'
 services:
+  app-confia:
+    container_name: app-confia
+    image: app-confia:latest
+    build:
+      context: .
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3302:3301
+
   postgres:
     container_name: postgres
     image: postgres
@@ -12,4 +23,3 @@ services:
       - POSTGRES_USER=lucas
       - POSTGRES_PASSWORD=myPassword
       - POSTGRES_DB=confia_db
-        
