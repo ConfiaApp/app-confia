@@ -1,13 +1,29 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
   async index(req, res) {
-    return res.json();
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'email'],
+      include: [
+        { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+      ],
+    });
+    return res.json(users);
   }
 
   async show(req, res) {
-    return res.json();
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email'],
+      include: [
+        { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+      ],
+    });
+    if (!user) {
+      return res.status(404).json({ error: 'User does not exists' });
+    }
+    return res.json(user);
   }
 
   async store(req, res) {
@@ -43,12 +59,8 @@ class UserController {
         .when('oldPassword', (oldPassword, field) =>
           oldPassword ? field.required() : field
         ),
-      confirmPassword: Yup.string().when(
-        'password',
-        (confirmPassword, field) =>
-          confirmPassword
-            ? field.required().oneOf([Yup.ref('password')])
-            : field
+      confirmPassword: Yup.string().when('password', (confirmPassword, field) =>
+        confirmPassword ? field.required().oneOf([Yup.ref('password')]) : field
       ),
     });
 
@@ -69,18 +81,24 @@ class UserController {
         }
       }
       if (oldPassword && !(await user.checkPassword(oldPassword))) {
-        return res.status(401).json({ error: 'Password does not match' });
+        return res.status(401).json({ error: 'Passwords does not match' });
       }
       const { id, name } = await user.update(req.body);
       return res.json({ id, name, email });
     } catch (error) {
-      console.log(error);
-      return res.status(400).json({ error: 'User does not updated' });
+      return res.status(400).json({ error: 'User was not updated' });
     }
   }
 
   async delete(req, res) {
-    return res.json();
+    const user = await User.findByPk(req.params.id);
+    if (user) {
+      const deletedUser = await User.destroy({ where: { id: req.params.id } });
+      return res
+        .status(200)
+        .json({ message: `User was deleted: ${deletedUser}` });
+    }
+    return res.status(404).json({ message: 'User does not exists' });
   }
 }
 export default new UserController();
