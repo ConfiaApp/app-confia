@@ -1,13 +1,34 @@
 import * as Yup from 'yup';
 import User from '../models/User';
+import File from '../models/File';
 
 class UserController {
   async index(req, res) {
-    return res.json();
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'email'],
+      include: [
+        { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+      ],
+    });
+    return res.json(users);
   }
 
   async show(req, res) {
-    return res.json();
+    try {
+      const user = await User.findByPk(req.params.id, {
+        attributes: ['id', 'name', 'email'],
+        include: [
+          { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+        ],
+      });
+      if (!user) {
+        return res.status(400).json({ error: 'User does not exists' });
+      }
+      return res.json(user);
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ error: 'User does not shown' });
+    }
   }
 
   async store(req, res) {
@@ -43,12 +64,8 @@ class UserController {
         .when('oldPassword', (oldPassword, field) =>
           oldPassword ? field.required() : field
         ),
-      confirmPassword: Yup.string().when(
-        'password',
-        (confirmPassword, field) =>
-          confirmPassword
-            ? field.required().oneOf([Yup.ref('password')])
-            : field
+      confirmPassword: Yup.string().when('password', (confirmPassword, field) =>
+        confirmPassword ? field.required().oneOf([Yup.ref('password')]) : field
       ),
     });
 
@@ -74,13 +91,19 @@ class UserController {
       const { id, name } = await user.update(req.body);
       return res.json({ id, name, email });
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return res.status(400).json({ error: 'User does not updated' });
     }
   }
 
   async delete(req, res) {
-    return res.json();
+    try {
+      await User.destroy({ where: { id: req.userId } });
+      return res.status(200).json({ message: 'The user was deleted' });
+    } catch (error) {
+      console.error(error);
+      return res.status(400).json({ error: 'User does not deleted' });
+    }
   }
 }
 export default new UserController();
