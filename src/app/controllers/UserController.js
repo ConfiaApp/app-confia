@@ -95,12 +95,14 @@ class UserController {
   }
 
   async delete(req, res) {
-    try {
-      await User.destroy({ where: { id: req.userId } });
-      return res.status(200).json({ message: 'User was deleted' });
-    } catch (error) {
-      return res.status(400).json({ error: 'User was not deleted' });
+    const user = await User.findByPk(req.params.id);
+    if (user) {
+      const deletedUser = await User.destroy({ where: { id: req.params.id } });
+      return res
+        .status(200)
+        .json({ message: `User was deleted: ${deletedUser}` });
     }
+    return res.status(404).json({ message: 'User does not exists' });
   }
 }
 export default new UserController();
