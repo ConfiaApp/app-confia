@@ -22,12 +22,11 @@ class UserController {
         ],
       });
       if (!user) {
-        return res.status(400).json({ error: 'User does not exists' });
+        return res.status(404).json({ error: 'User does not exists' });
       }
       return res.json(user);
     } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error: 'User does not shown' });
+      return res.status(400).json({ error: 'It´s not possible to show user' });
     }
   }
 
@@ -86,23 +85,21 @@ class UserController {
         }
       }
       if (oldPassword && !(await user.checkPassword(oldPassword))) {
-        return res.status(401).json({ error: 'Password does not match' });
+        return res.status(401).json({ error: 'Passwords does not match' });
       }
       const { id, name } = await user.update(req.body);
       return res.json({ id, name, email });
     } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error: 'User does not updated' });
+      return res.status(400).json({ error: 'User was not updated' });
     }
   }
 
   async delete(req, res) {
     try {
       await User.destroy({ where: { id: req.userId } });
-      return res.status(200).json({ message: 'The user was deleted' });
+      return res.status(200).json({ message: 'User was deleted' });
     } catch (error) {
-      console.error(error);
-      return res.status(400).json({ error: 'User does not deleted' });
+      return res.status(400).json({ error: 'User was not deleted' });
     }
   }
 }
