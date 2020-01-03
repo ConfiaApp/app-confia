@@ -14,20 +14,16 @@ class UserController {
   }
 
   async show(req, res) {
-    try {
-      const user = await User.findByPk(req.params.id, {
-        attributes: ['id', 'name', 'email'],
-        include: [
-          { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
-        ],
-      });
-      if (!user) {
-        return res.status(404).json({ error: 'User does not exists' });
-      }
-      return res.json(user);
-    } catch (error) {
-      return res.status(400).json({ error: 'It´s not possible to show user' });
+    const user = await User.findByPk(req.params.id, {
+      attributes: ['id', 'name', 'email'],
+      include: [
+        { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
+      ],
+    });
+    if (!user) {
+      return res.status(404).json({ error: 'User does not exists' });
     }
+    return res.json(user);
   }
 
   async store(req, res) {
