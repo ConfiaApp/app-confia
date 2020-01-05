@@ -19,5 +19,12 @@ module.exports = {
     "no-param-reassign": "off",
     "camelcase": "off",
     "no-unused-vars": ["error", { "argsIgnorePatter": "next" }]
-  }
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  },
 };
