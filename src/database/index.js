@@ -7,8 +7,10 @@ import File from '../app/models/File';
 import Player from '../app/models/Player';
 import Status from '../app/models/Status';
 import Team from '../app/models/Team';
+import Challenge from '../app/models/Challenge';
+import ChallengeType from '../app/models/ChallengeType';
 
-const models = [User, File, Player, Status, Team];
+const models = [User, File, Player, Status, Team, Challenge, ChallengeType];
 
 class Database {
   constructor() {
