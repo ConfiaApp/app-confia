@@ -4,8 +4,13 @@ import File from '../models/File';
 
 class UserController {
   async index(req, res) {
+    const { page = 1 } = req.query;
+
     const users = await User.findAll({
       attributes: ['id', 'name', 'email'],
+      order: [['created_at', 'DESC']],
+      limit: 5,
+      offset: (page - 1) * 5,
       include: [
         { model: File, as: 'avatar', attributes: ['name', 'path', 'url'] },
       ],

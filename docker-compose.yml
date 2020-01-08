@@ -10,6 +10,8 @@ services:
       - /usr/src/app/node_modules
     ports:
       - 3302:3301
+    networks:
+      - api
 
   postgres:
     container_name: postgres
@@ -17,9 +19,28 @@ services:
     ports:
       - 5433:5432
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     restart: on-failure
     environment:
       - POSTGRES_USER=lucas
       - POSTGRES_PASSWORD=myPassword
       - POSTGRES_DB=confia_db
+    networks:
+      - api
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data/mongo:/var/lib/mongo/data
+    restart: on-failure
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=myPassword
+    networks:
+      - api
+
+networks:
+  api:
