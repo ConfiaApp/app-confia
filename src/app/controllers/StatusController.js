@@ -10,12 +10,12 @@ class StatusController {
       return res.status(400).json({ error: `Invalid request.` });
     }
     const status = await Status.findOne({
-      where: { name: req.body.name.toUpperCase() },
+      where: { name: req.body.name },
     });
     if (status) {
       return res.status(404).json({ error: `The status already exists.` });
     }
-    const result = await Status.create(req.body.name.toUpperCase());
+    const result = await Status.create(req.body);
     return res.json({ result });
   }
 }
