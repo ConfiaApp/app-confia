@@ -3,6 +3,7 @@ import Challenge from '../models/Challenge';
 import ChallengeType from '../models/ChallengeType';
 import Player from '../models/Player';
 import User from '../models/User';
+import Status from '../models/Status';
 
 class ChallengeController {
   async index(req, res) {
@@ -30,6 +31,23 @@ class ChallengeController {
           model: Player,
           as: 'opponent',
           attributes: ['id', 'trusts', 'beers'],
+          include: [
+            {
+              model: User,
+              as: 'user',
+              attributes: ['id', 'name', 'email'],
+            },
+          ],
+        },
+        {
+          model: ChallengeType,
+          as: 'type',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: Status,
+          as: 'status',
+          attributes: ['id', 'name'],
         },
       ],
     });
@@ -66,7 +84,12 @@ class ChallengeController {
         },
         {
           model: ChallengeType,
-          as: 'challengeType',
+          as: 'type',
+          attributes: ['id', 'name'],
+        },
+        {
+          model: Status,
+          as: 'status',
           attributes: ['id', 'name'],
         },
       ],
@@ -125,10 +148,10 @@ class ChallengeController {
 
   async update(req, res) {
     const schema = Yup.object().shape({
-      id_challenger: Yup.number()
+      challenger_id: Yup.number()
         .integer()
         .required(),
-      id_opponent: Yup.number()
+      opponent_id: Yup.number()
         .integer()
         .required(),
       type_id: Yup.number()
@@ -149,12 +172,12 @@ class ChallengeController {
     try {
       const {
         id,
-        id_challenger,
-        id_opponent,
+        challenger_id,
+        opponent_id,
         type_id,
         status_id,
       } = await challenge.update(req.body);
-      return res.json({ id, id_challenger, id_opponent, type_id, status_id });
+      return res.json({ id, challenger_id, opponent_id, type_id, status_id });
     } catch (error) {
       console.log(error);
       return res.status(400).json({ error: 'Challenge was not update' });

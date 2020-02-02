@@ -14,14 +14,14 @@ class Challenge extends Model {
   static associate(models) {
     this.belongsTo(models.Player, {
       foreignKey: 'challenger_id',
-      as: 'challenge',
+      as: 'challenger',
     });
     this.belongsTo(models.Player, {
       foreignKey: 'opponent_id',
       as: 'opponent',
     });
-    this.belongsTo(models.Player, { foreignKey: 'type_id', as: 'type' });
-    this.belongsTo(models.Player, { foreignKey: 'status_id', as: 'status' });
+    this.belongsTo(models.ChallengeType, { foreignKey: 'type_id', as: 'type' });
+    this.belongsTo(models.Status, { foreignKey: 'status_id', as: 'status' });
   }
 }
 
