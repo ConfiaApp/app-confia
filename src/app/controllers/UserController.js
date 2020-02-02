@@ -50,8 +50,13 @@ class UserController {
     if (userExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
-    const { id, name, email } = await User.create(req.body);
-    return res.json({ id, name, email });
+    try {
+      const { id, name, email, avatar_id } = await User.create(req.body);
+      return res.json({ id, name, email, avatar_id });
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'User was not created' });
+    }
   }
 
   async update(req, res) {
@@ -91,6 +96,7 @@ class UserController {
       const { id, name } = await user.update(req.body);
       return res.json({ id, name, email });
     } catch (error) {
+      console.log(error);
       return res.status(400).json({ error: 'User was not updated' });
     }
   }
