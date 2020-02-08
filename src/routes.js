@@ -18,7 +18,7 @@ const upload = multer(multerConfig);
 // Rotas sem autenticação : application/json
 routes.post('/users', UserController.store);
 routes.post('/players', PlayerController.store);
-routes.post('/session', SessionController.store);
+routes.post('/sessions', SessionController.store);
 
 routes
   .post('/status', StatusController.store)
@@ -43,18 +43,18 @@ routes
   .delete('/players/:id', PlayerController.delete);
 
 routes
-  .post('/challenge-type', ChallengeTypeController.store)
-  .put('/challenge-type/:id', ChallengeTypeController.update)
-  .get('/challenge-type', ChallengeTypeController.index)
-  .get('/challenge-type/:id', ChallengeTypeController.show)
-  .delete('/challenge-type/:id', ChallengeTypeController.delete);
+  .post('/challenge-types', ChallengeTypeController.store)
+  .put('/challenge-types/:id', ChallengeTypeController.update)
+  .get('/challenge-types', ChallengeTypeController.index)
+  .get('/challenge-types/:id', ChallengeTypeController.show)
+  .delete('/challenge-types/:id', ChallengeTypeController.delete);
 
 routes
-  .post('/challenge', ChallengeController.store)
-  .put('/challenge/:id', ChallengeController.update)
-  .get('/challenge', ChallengeController.index)
-  .get('/challenge/:id', ChallengeController.show)
-  .delete('/challenge/:id', ChallengeController.delete);
+  .post('/challenges', ChallengeController.store)
+  .put('/challenges/:id', ChallengeController.update)
+  .get('/challenges', ChallengeController.index)
+  .get('/challenges/:id', ChallengeController.show)
+  .delete('/challenges/:id', ChallengeController.delete);
 
 routes
   .post('/teams', TeamController.store)
