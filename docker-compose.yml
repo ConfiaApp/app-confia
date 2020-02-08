@@ -28,19 +28,5 @@ services:
     networks:
       - api
 
-  mongo:
-    container_name: mongo
-    image: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - ./data/mongo:/var/lib/mongo/data
-    restart: on-failure
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=myPassword
-    networks:
-      - api
-
 networks:
   api:

@@ -1,6 +1,6 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('challenge', {
+    return queryInterface.createTable('challenges', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -17,21 +17,21 @@ module.exports = {
       },
       challenger_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'player', key: 'id' },
+        references: { model: 'players', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: false,
       },
       opponent_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'player', key: 'id' },
+        references: { model: 'players', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: false,
       },
       type_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'challenge_type', key: 'id' },
+        references: { model: 'challenge_types', key: 'id' },
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL',
         allowNull: true,
@@ -47,6 +47,6 @@ module.exports = {
   },
 
   down: queryInterface => {
-    return queryInterface.dropTable('challenge');
+    return queryInterface.dropTable('challenges');
   },
 };

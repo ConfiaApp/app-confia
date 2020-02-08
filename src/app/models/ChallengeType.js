@@ -14,7 +14,7 @@ class ChallengeType extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Status, { foreignKey: 'status_id' });
+    this.belongsTo(models.Status, { foreignKey: 'status_id', as: 'status' });
   }
 }
 
