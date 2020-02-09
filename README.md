@@ -1,4 +1,6 @@
 # app_confia
+Game designed to engage teams that love beer :beer:
+
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/ed09a650b36948528147806762f9a70c)](https://www.codacy.com/manual/victorpb/app_confia?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=lucassiqueira08/app_confia&amp;utm_campaign=Badge_Grade)
 
 Protótipo:
