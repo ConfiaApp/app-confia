@@ -1,0 +1,15 @@
+name: training github actions 
+on: 
+  push:
+    branches:
+      - ale
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: yarn install
+      - run: yarn publish
