@@ -1,4 +1,3 @@
-name: training github actions 
 on: 
   push:
     branches:
